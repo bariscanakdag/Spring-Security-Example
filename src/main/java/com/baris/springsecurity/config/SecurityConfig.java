@@ -18,14 +18,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         User.UserBuilder users = User.withDefaultPasswordEncoder();
 
         auth.inMemoryAuthentication()
-                .withUser(users.username("baris").password("123").roles("EMPLOYE"))
-                .withUser(users.username("mehmet").password("123").roles("MANAGER"))
-                .withUser(users.username("ahmet").password("123").roles("ADMIN"));
+                .withUser(users.username("baris").password("123").roles("EMPLOYEE"))
+                .withUser(users.username("mehmet").password("123").roles("EMPLOYEE", "MANAGER"))
+                .withUser(users.username("ahmet").password("123").roles("EMPLOYEE", "ADMIN"));
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/").hasAnyRole("EMPLOYEE")
+                .antMatchers("/leaders/**").hasAnyRole("MANAGER")
+                .antMatchers("/systems/**").hasAnyRole("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -35,6 +38,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll();
+                .permitAll()
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/access-denied");
     }
 }

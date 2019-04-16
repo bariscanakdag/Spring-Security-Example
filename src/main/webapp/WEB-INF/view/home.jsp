@@ -17,7 +17,7 @@
 
 <hr>
 <p>
-User : <securtiy:authentication property="principal.username"/>
+    User : <securtiy:authentication property="principal.username"/>
 </p>
 <p>
     Role : <securtiy:authentication property="principal.authorities"/>
@@ -26,6 +26,24 @@ User : <securtiy:authentication property="principal.username"/>
 <form:form action="${pageContext.request.contextPath}/logout" method="post">
     <input type="submit" value="Logout">
 </form:form>
+<hr>
 
+<securtiy:authorize access="hasRole('MANAGER')">
+    <p>
+        <a href="${pageContext.request.contextPath}/leaders">LeaderShip Meeting</a>
+        (Only for LeaderShip)
+    </p>
+</securtiy:authorize>
+
+<hr>
+
+<securtiy:authorize access="hasRole('ADMIN')">
+    <p>
+
+        <a href="${pageContext.request.contextPath}/systems">Only for Adminisrator</a>
+    </p>
+</securtiy:authorize>
+
+<hr>
 </body>
 </html>
